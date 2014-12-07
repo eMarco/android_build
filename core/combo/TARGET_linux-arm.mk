@@ -40,6 +40,7 @@ else
 TARGET_GCC_VERSION := $(TARGET_GCC_VERSION_EXP)
 endif
 
+
 TARGET_ARCH_SPECIFIC_MAKEFILE := $(BUILD_COMBOS)/arch/$(TARGET_ARCH)/$(TARGET_ARCH_VARIANT).mk
 ifeq ($(strip $(wildcard $(TARGET_ARCH_SPECIFIC_MAKEFILE))),)
 $(error Unknown ARM architecture version: $(TARGET_ARCH_VARIANT))
@@ -101,6 +102,15 @@ else
                             -Os \
                             -fomit-frame-pointer \
                             -fno-strict-aliasing
+endif
+
+# Allow disabling strict aliasing to specifically ARM...
+ifeq ($(DEBUG_DISABLE_STRICT_ALIASING_ARM),true)
+TARGET_arm_CFLAGS += -fno-strict-aliasing -Wno-error=strict-aliasing
+endif
+# ...and THUMB
+ifeq ($(DEBUG_DISABLE_STRICT_ALIASING_THUMB),true)
+TARGET_thumb_CFLAGS += -fno-strict-aliasing -Wno-error=strict-aliasing
 endif
 
 # Set FORCE_ARM_DEBUGGING to "true" in your buildspec.mk
@@ -173,11 +183,15 @@ TARGET_GLOBAL_CFLAGS += -mthumb-interwork
 
 TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden
 
+ifneq ($(DEBUG_DISABLE_CXX11),true)
+TARGET_GLOBAL_CPPFLAGS += -std=gnu++11
+endif
+
 # More flags/options can be added here
 TARGET_RELEASE_CFLAGS := \
 			-DNDEBUG \
-			-g \
 			-Wstrict-aliasing=2 \
+			-Werror=strict-aliasing \
 			-fgcse-after-reload \
 			-frerun-cse-after-loop \
 			-frename-registers
@@ -238,7 +252,16 @@ else
     KERNEL_HEADERS_COMMON := $(libc_root)/kernel/common
     KERNEL_HEADERS_ARCH   := $(libc_root)/kernel/arch-$(TARGET_ARCH)
 endif
+
 KERNEL_HEADERS := $(KERNEL_HEADERS_COMMON) $(KERNEL_HEADERS_ARCH)
+
+# Define LTO (Link-Time Optimization) options.
+$TARGET_LTO_CFLAGS :=
+$TARGET_LTO_LDFLAGS :=
+ifneq ($(DEBUG_DISABLE_LTO),true)
+$TARGET_LTO_CFLAGS += -flto -fno-toplevel-reorder -fuse-linker-plugin
+$TARGET_LTO_LDFLAGS += $(TARGET_LTO_CFLAGS) -Wl,-flto
+endif
 
 TARGET_C_INCLUDES := \
 	$(libc_root)/arch-arm/include \
