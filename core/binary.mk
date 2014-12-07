@@ -125,6 +125,19 @@ ifeq ($(strip $(LOCAL_CLANG)),true)
 endif
 
 ####################################################
+## Add LTO flags if LTO is turned on, supported
+## and we aren't building a host module.
+####################################################
+ifeq ($(strip $(LOCAL_NO_LTO_SUPPORT)),)
+  ifeq ($(strip $(LOCAL_CLANG)),)
+    ifeq ($(strip $(LOCAL_IS_HOST_MODULE)),)
+      my_cflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_LTO_CFLAGS)
+      my_ldflags += $($(LOCAL_2ND_ARCH_VAR_PREFIX)TARGET_LTO_LDFLAGS)
+    endif
+  endif
+endif
+
+####################################################
 ## Add FDO flags if FDO is turned on and supported
 ####################################################
 ifeq ($(strip $(LOCAL_NO_FDO_SUPPORT)),)
