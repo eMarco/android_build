@@ -106,7 +106,7 @@ else
                             -Os \
                             -fomit-frame-pointer \
                             -fno-strict-aliasing
-
+endif
 
 # Allow disabling strict aliasing to specifically ARM...
 ifeq ($(DEBUG_DISABLE_STRICT_ALIASING_ARM),true)
