@@ -51,17 +51,13 @@ ifeq ($(strip $(TARGET_FPU_VARIANT)),neon-fp16)
 endif
 endif
 
-<<<<<<< HEAD
 
-ifeq ($(strip $(TARGET_$CPU_VARIANT)),cortex-a8)
-=======
 # LTO can behave oddly if these aren't explicitly passed...
->>>>>>> 331b970... Fix-ups to armv7-a-neon arch combo.
 arch_variant_ldflags := \
 	-Wl,-march=armv7-a \
 	-march=armv7-a
 
-ifeq ($(strip $(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)),cortex-a8)
+ifeq ($(strip $(TARGET_CPU_VARIANT)),cortex-a8)
 arch_variant_ldflags += \
 	-Wl,--fix-cortex-a8
 else
