@@ -74,8 +74,8 @@ TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 ifeq ($(TARGET_USE_O3),true)
 TARGET_arm_CFLAGS :=    -O3 \
                         -fomit-frame-pointer \
-                        -fstrict-aliasing    \
-                        -funswitch-loops
+			-fstrict-aliasing \
+			-funswitch-loops
 else
 TARGET_arm_CFLAGS :=    -Os \
                         -fomit-frame-pointer \
@@ -93,14 +93,9 @@ ifeq ($(TARGET_USE_O3),true)
     TARGET_thumb_CFLAGS :=  -mthumb \
                             -O3 \
                             -fomit-frame-pointer \
-                            -fno-strict-aliasing \
+                            -fstrict-aliasing \
                             -Wstrict-aliasing=2 \
-                            -Werror=strict-aliasing \
-                            -fno-tree-vectorize \
-                            -funsafe-math-optimizations \
-                            -Wno-unused-parameter \
-                            -Wno-unused-value \
-                            -Wno-unused-function
+                            -Werror=strict-aliasing
 else
     TARGET_thumb_CFLAGS :=  -mthumb \
                             -Os \
