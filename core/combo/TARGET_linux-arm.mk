@@ -96,7 +96,12 @@ ifeq ($(TARGET_USE_O3),true)
                             -fomit-frame-pointer \
                             -fstrict-aliasing \
                             -Wstrict-aliasing=2 \
-                            -Werror=strict-aliasing
+                            -Werror=strict-aliasing \
+                            -fno-tree-vectorize \
+                            -funsafe-math-optimizations \
+                            -Wno-unused-parameter \
+                            -Wno-unused-value \
+                            -Wno-unused-function
 else
     TARGET_thumb_CFLAGS :=  -mthumb \
                             -Os \
