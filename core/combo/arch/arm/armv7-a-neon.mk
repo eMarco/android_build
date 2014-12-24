@@ -35,5 +35,10 @@ endif
 arch_variant_cflags += \
     -mfloat-abi=softfp
 
-arch_variant_ldflags := \
+ifneq ($(strip $(TARGET_CPU_VARIANT)),cortex-a8)
+	arch_variant_ldflags := \
+	-Wl,--no-fix-cortex-a8
+else
+	arch_variant_ldflags := \
 	-Wl,--fix-cortex-a8
+endif

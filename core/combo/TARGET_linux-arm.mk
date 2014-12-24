@@ -60,7 +60,7 @@ TARGET_AR := $(TARGET_TOOLS_PREFIX)ar$(HOST_EXECUTABLE_SUFFIX)
 TARGET_OBJCOPY := $(TARGET_TOOLS_PREFIX)objcopy$(HOST_EXECUTABLE_SUFFIX)
 
 ifeq ($(strip $(TARGET_LD)),)
-	TARGET_LD := $(TARGET_TOOLS_PREFIX)ld$(HOST_EXECUTABLE_SUFFIX)
+    TARGET_LD := $(TARGET_TOOLS_PREFIX)ld$(HOST_EXECUTABLE_SUFFIX)
 endif
 TARGET_STRIP := $(TARGET_TOOLS_PREFIX)strip$(HOST_EXECUTABLE_SUFFIX)
 ifeq ($(TARGET_BUILD_VARIANT),user)
@@ -126,11 +126,11 @@ endif
 
 # Allow disabling strict aliasing to specifically ARM...
 ifeq ($(DEBUG_DISABLE_STRICT_ALIASING_ARM),true)
-TARGET_arm_CFLAGS += -fno-strict-aliasing -Wno-error=strict-aliasing
+    TARGET_arm_CFLAGS += -fno-strict-aliasing -Wno-error=strict-aliasing
 endif
 # ...and THUMB
 ifeq ($(DEBUG_DISABLE_STRICT_ALIASING_THUMB),true)
-TARGET_thumb_CFLAGS += -fno-strict-aliasing -Wno-error=strict-aliasing
+    TARGET_thumb_CFLAGS += -fno-strict-aliasing -Wno-error=strict-aliasing
 endif
 
 # Set FORCE_ARM_DEBUGGING to "true" in your buildspec.mk
@@ -206,7 +206,7 @@ TARGET_GLOBAL_CFLAGS += -mthumb-interwork
 TARGET_GLOBAL_CPPFLAGS += -fvisibility-inlines-hidden
 
 ifneq ($(DEBUG_DISABLE_CXX11),true)
-TARGET_GLOBAL_CPPFLAGS += -std=gnu++11
+   TARGET_GLOBAL_CPPFLAGS += -std=gnu++11
 endif
 
 # More flags/options can be added here
@@ -286,11 +286,11 @@ endif
 KERNEL_HEADERS := $(KERNEL_HEADERS_COMMON) $(KERNEL_HEADERS_ARCH)
 
 # Define LTO (Link-Time Optimization) options.
-$TARGET_LTO_CFLAGS :=
-$TARGET_LTO_LDFLAGS :=
+TARGET_LTO_CFLAGS :=
+TARGET_LTO_LDFLAGS :=
 ifneq ($(DEBUG_DISABLE_LTO),true)
-$TARGET_LTO_CFLAGS += -flto -fno-toplevel-reorder -fuse-linker-plugin
-$TARGET_LTO_LDFLAGS += $(TARGET_LTO_CFLAGS) -Wl,-flto
+   TARGET_LTO_CFLAGS += -flto -fno-toplevel-reorder -fuse-linker-plugin
+   TARGET_LTO_LDFLAGS += $(TARGET_LTO_CFLAGS) -Wl,-flto
 endif
 
 TARGET_C_INCLUDES := \
