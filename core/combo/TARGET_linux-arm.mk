@@ -35,7 +35,7 @@ TARGET_ARCH_VARIANT := armv7-a
 endif
 
 ifeq ($(strip $(TARGET_GCC_VERSION_EXP)),)
-TARGET_GCC_VERSION := 4.7
+TARGET_GCC_VERSION := 4.8
 else
 TARGET_GCC_VERSION := $(TARGET_GCC_VERSION_EXP)
 endif
@@ -76,7 +76,10 @@ ifeq ($(TARGET_USE_O3),true)
 TARGET_arm_CFLAGS :=    -O3 \
                         -fomit-frame-pointer \
 			-fstrict-aliasing \
-			-funswitch-loops
+			-funswitch-loops \
+			-Wno-error=unused-parameter \
+			-Wno-error=unused-but-set-variable \
+			-Wno-error=maybe-uninitialized
 else
 TARGET_arm_CFLAGS :=    -Os \
                         -fomit-frame-pointer \
@@ -101,12 +104,24 @@ ifeq ($(TARGET_USE_O3),true)
                             -funsafe-math-optimizations \
                             -Wno-unused-parameter \
                             -Wno-unused-value \
-                            -Wno-unused-function
+                            -Wno-unused-function \
+                            -Wno-error=unused-parameter \
+                            -Wno-error=unused-but-set-variable \
+                            -Wno-error=maybe-uninitialized
+                            
+                            
 else
     TARGET_thumb_CFLAGS :=  -mthumb \
                             -Os \
                             -fomit-frame-pointer \
                             -fno-strict-aliasing
+endif
+
+ifeq ($(TARGET_USE_JAs),true)
+    # Target ARM. Usually you don't need to change anything here
+    TARGET_arm_CFLAGS := -O3 -DNDEBUG -fstrict-aliasing -funsafe-loop-optimizations -fsection-anchors -fivopts -ftree-loop-im -ftree-loop-ivcanon -ffunction-sections -fdata-sections -funswitch-loops -frename-registers -fomit-frame-pointer -fgcse-sm -fgcse-las -fweb -ftracer -Wno-error=unused-parameter -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized
+    # Target THUMB, major portion of Android. Please change -O3 back to -Os in case of issues
+    TARGET_thumb_CFLAGS := -O3 -DNDEBUG -fstrict-aliasing -funsafe-loop-optimizations -fsection-anchors -fivopts -ftree-loop-im -ftree-loop-ivcanon -ffunction-sections -fdata-sections -funswitch-loops -frename-registers -fomit-frame-pointer -fgcse-sm -fgcse-las -fweb -ftracer -Wno-error=unused-parameter -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized
 endif
 
 # Allow disabling strict aliasing to specifically ARM...
@@ -160,9 +175,11 @@ TARGET_GLOBAL_CFLAGS += \
 # We cannot turn it off blindly since the option is not available
 # in gcc-4.4.x.  We also want to disable sincos optimization globally
 # by turning off the builtin sin function.
-ifneq ($(filter 4.6 4.6.% 4.7 4.7.% 4.8 4.8.% 4.9 4.9.%, $(TARGET_GCC_VERSION)),)
-TARGET_GLOBAL_CFLAGS += -Wno-unused-but-set-variable -fno-builtin-sin \
+ifneq ($(TARGET_USE_JAs),true)
+   ifneq ($(filter 4.6 4.6.% 4.7 4.7.% 4.8 4.8.% 4.9 4.9.%, $(TARGET_GCC_VERSION)),)
+      TARGET_GLOBAL_CFLAGS += -Wno-unused-but-set-variable -fno-builtin-sin \
 			-fno-strict-volatile-bitfields
+   endif
 endif
 
 # This is to avoid the dreaded warning compiler message:
@@ -201,6 +218,13 @@ TARGET_RELEASE_CFLAGS := \
 			-fgcse-after-reload \
 			-frerun-cse-after-loop \
 			-frename-registers
+
+ifeq ($(TARGET_USE_JAs),true)
+    # Release CFLAGS. Usually you don't need to change anything here
+    TARGET_RELEASE_CFLAGS := -O3 -DNDEBUG -fno-strict-aliasing -funsafe-loop-optimizations -fsection-anchors -fivopts -ftree-loop-im -ftree-loop-ivcanon -ffunction-sections -fdata-sections -funswitch-loops -frename-registers -fomit-frame-pointer -fgcse-sm -fgcse-las -fweb -ftracer -Wno-error=unused-parameter -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized
+    # Release CPPFLAGS. Usually you don't need to change anything here
+    TARGET_GLOBAL_CPPFLAGS += -O3 -DNDEBUG -funsafe-loop-optimizations -fsection-anchors -fivopts -ftree-loop-im -ftree-loop-ivcanon -ffunction-sections -fdata-sections -funswitch-loops -frename-registers -fomit-frame-pointer -fgcse-sm -fgcse-las -fweb -ftracer -Wno-error=unused-parameter -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized -Wstrict-aliasing=3    
+endif
 
 libc_root := bionic/libc
 libm_root := bionic/libm
