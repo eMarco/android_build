@@ -117,6 +117,7 @@ else
                             -fno-strict-aliasing
 endif
 
+#JustArchi's Optimizations V3
 ifeq ($(TARGET_USE_JAs),true)
     # Target ARM. Usually you don't need to change anything here
     TARGET_arm_CFLAGS := -O3 -DNDEBUG -fstrict-aliasing -funsafe-loop-optimizations -fsection-anchors -fivopts -ftree-loop-im -ftree-loop-ivcanon -ffunction-sections -fdata-sections -funswitch-loops -frename-registers -fomit-frame-pointer -fgcse-sm -fgcse-las -fweb -ftracer -Wno-error=unused-parameter -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized
@@ -219,6 +220,7 @@ TARGET_RELEASE_CFLAGS := \
 			-frerun-cse-after-loop \
 			-frename-registers
 
+#JustArchi's Optimizations V3
 ifeq ($(TARGET_USE_JAs),true)
     # Release CFLAGS. Usually you don't need to change anything here
     TARGET_RELEASE_CFLAGS := -O3 -DNDEBUG -fno-strict-aliasing -funsafe-loop-optimizations -fsection-anchors -fivopts -ftree-loop-im -ftree-loop-ivcanon -ffunction-sections -fdata-sections -funswitch-loops -frename-registers -fomit-frame-pointer -fgcse-sm -fgcse-las -fweb -ftracer -Wno-error=unused-parameter -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized
