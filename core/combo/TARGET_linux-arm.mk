@@ -105,10 +105,7 @@ ifeq ($(TARGET_USE_O3),true)
                             -Wno-unused-parameter \
                             -Wno-unused-value \
                             -Wno-unused-function \
-                            -Wno-error=unused-parameter \
-                            -Wno-error=unused-but-set-variable \
-                            -Wno-error=maybe-uninitialized
-                            
+                           
                             
 else
     TARGET_thumb_CFLAGS :=  -mthumb \
