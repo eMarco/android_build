@@ -15,6 +15,8 @@ ifeq ($(strip $(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)),cortex-a9)
 else
 ifneq (,$(filter cortex-a8 scorpion,$(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)))
 	arch_variant_cflags := -mcpu=cortex-a8
+	arch_variant_ldflags := \
+	-Wl,--fix-cortex-a8
 else
 ifeq ($(strip $(TARGET_$(combo_2nd_arch_prefix)CPU_VARIANT)),cortex-a7)
 	arch_variant_cflags := -mcpu=cortex-a7
@@ -32,6 +34,3 @@ endif
 arch_variant_cflags += \
     -mfloat-abi=softfp \
     -mfpu=neon
-
-arch_variant_ldflags := \
-	-Wl,--fix-cortex-a8
